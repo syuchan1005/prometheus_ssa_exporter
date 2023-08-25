@@ -72,7 +72,7 @@ const getPhysicalDrives = async (controllerSlot) => {
   return result;
 };
 
-const statusToInt = (str) => (str === 'OK' ? 1 : 0);
+const statusToInt = (str) => (str === 'OK' ? 0 : 1);
 
 const makeControllerMetrics = async (controllers) => {
   const lines = [];
@@ -151,7 +151,7 @@ const makePhysicalDriveMetrics = async (controllers) => {
     `# TYPE ${driveStatusKey} gauge`,
     ...controllerDrives.flatMap(({ controller, arrays}) =>
       Object.entries(arrays).flatMap(([arrayLabel, drives]) =>
-        drives.map((drive) => `${driveTemperatureKey}{hostname="${os.hostname()}",slot="${controller.Slot}",serial="${controller['Serial Number']}",array="${arrayLabel}",drivePort="${drive.Port}",driveBox="${drive.Box}",driveBay="${drive.Bay}"} ${drive['Current Temperature (C)']}`)
+        drives.map((drive) => `${driveTemperatureKey}{hostname="${os.hostname()}",slot="${controller.Slot}",serial="${controller['Serial Number']}",array="${arrayLabel}",drivePort="${drive.Port}",driveBox="${drive.Box}",driveBay="${drive.Bay}"} ${drive['Current Temperature (C)'] || -1}`)
       ),
     ),
   );
